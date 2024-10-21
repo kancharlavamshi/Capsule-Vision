@@ -23,4 +23,10 @@ Model Development: Create robust AI models that can effectively classify abnorma
 Evaluation: Test and evaluate model performance using metrics such as accuracy, precision, recall, and F1 score.
 
 <details>
-<summary>Training Models</summary>
+<summary>Install</summary>
+ Clone repo and install requirements.txt in a Python>=3.8.0 environment, including PyTorch>=1.8.
+'''
+git clone https://github.com/kancharlavamshi/Capsule-Vision # clone
+cd Capsule-Vision
+pip install -r requirements.txt  # install
+'''
