@@ -38,10 +38,11 @@ pip install -r requirements.txt  # install
 <details>
 <summary>Train Model</summary>
 The commands below are used to train the model with specified configurations. The training process automatically handles data downloads and model initialization. Training times will vary depending on the model and the hardware used; expect different durations based on GPU capabilities. Use the largest --batch-size possible for optimal performance, or set --batch-size -1 for automatic batch sizing.
+ 
  ```
-python train.py --epochs 60 --batch-size 256 --save-model True --device cuda:0 --data_parallel True --parameters-print True --save-path ./output --model-name Model_ --validation-size 0.1 --L-r 0.0001 --Loss-func CrossEntropyLoss --Train-Model efficient
-
+ python train.py --epochs 60 --batch-size 256 --save-model True --device cuda:0 --data_parallel True --parameters-print True --save-path ./output --model-name Model_ --validation-size 0.1 --L-r 0.0001 --Loss-func CrossEntropyLoss --Train-Model efficient
 ```
+
 </details> 
 
 
