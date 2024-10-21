@@ -21,3 +21,4 @@ Participants are tasked with developing an AI model to classify abnormalities ca
 **Objectives**
 Model Development: Create robust AI models that can effectively classify abnormalities based on the provided video frames.
 Evaluation: Test and evaluate model performance using metrics such as accuracy, precision, recall, and F1 score.
+
