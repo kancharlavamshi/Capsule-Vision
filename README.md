@@ -36,7 +36,7 @@ pip install -r requirements.txt  # install
 
 
 <details>
-<summary>Train Model</summary>
+<summary>Train</summary>
 The commands below are used to train the model with specified configurations. The training process automatically handles data downloads and model initialization. Training times will vary depending on the model and the hardware used; expect different durations based on GPU capabilities. Use the largest --batch-size possible for optimal performance, or set --batch-size -1 for automatic batch sizing.
  
  ```
@@ -44,5 +44,17 @@ The commands below are used to train the model with specified configurations. Th
 ```
 
 </details> 
+
+
+<details>
+<summary>Validation</summary>
+The following commands are used to validate the model and generate relevant metrics.
+ 
+ ```
+python validate.py --save-path ./output --Model-used efficient --confusion-matrix True --indiviual-accuracy-plt True --Save_Prediction True --Train-xls-path ./training/training_data.xlsx --Val-xls-path ./validation/validation_data.xlsx
+```
+
+</details> 
+
 
 
