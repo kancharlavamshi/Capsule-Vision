@@ -25,9 +25,11 @@ Evaluation: Test and evaluate model performance using metrics such as accuracy, 
 <details>
 <summary>Install</summary>
  Clone repo and install requirements.txt in a Python>=3.8.0 environment, including PyTorch>=1.8.
-</details> 
-```
+
+ ```
 git clone https://github.com/kancharlavamshi/Capsule-Vision # clone
 cd Capsule-Vision
 pip install -r requirements.txt  # install
 ```
+</details> 
+
