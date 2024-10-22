@@ -15,8 +15,9 @@ import seaborn as sns
 import numpy as np
 import argparse
 import torch.nn.functional as F
-from model import EfficientNetWithAttention,EfficientNetWithAttention_fusion,UNet,EfficientNetWithAttention_fusion_1
-
+from models import EfficientNetWithAttention,EfficientNetWithAttention_fusion,UNet,EfficientNet_NoAttention_fusion
+from evalution_metrics import save_predictions_to_excel,calculate_specificity,generate_metrics_report,one_hot_encode
+import json
 
 def conf_matrix(ground_truth_test, predictions_test,save_path,file_name):
     # class names from dataset
@@ -35,7 +36,7 @@ def conf_matrix(ground_truth_test, predictions_test,save_path,file_name):
     plt.ylabel('True Label')
     plt.title('Confusion Matrix with Class Names')
 
-    image_path = f"{save_path}/{file_name}CM_.png"
+    image_path = f"{str(save_path)}{file_name}CM_.png"
     # Save the plot
     plt.savefig(image_path)
     plt.show()
@@ -137,6 +138,7 @@ def test_inference(model,unet_model,Val_loader):
     Model_used = opt.Model_used
     save_path = opt.save_path
     Save_Prediction = opt.Save_Prediction
+    metrics_report = opt.metrics_report
 
     from sklearn.metrics import accuracy_score
     test_accuracies=[]
@@ -162,8 +164,8 @@ def test_inference(model,unet_model,Val_loader):
                outputs = model(unet_output) 
 
             probabilities = F.softmax(outputs, dim=1)
-            outputs = torch.argmax(outputs, dim=1)
-            predictions_test.extend(torch.round(outputs).cpu().numpy())
+            outputs_1 = torch.argmax(outputs, dim=1)
+            predictions_test.extend(torch.round(outputs_1).cpu().numpy())
             ground_truth_test.extend(labels.cpu().numpy())
             rows.append(probabilities.cpu().numpy())
 
@@ -171,28 +173,41 @@ def test_inference(model,unet_model,Val_loader):
         rows = np.concatenate(rows, axis=0)
         reshaped_rows = rows.reshape(len(rows), 10)
         new_rows_df = pd.DataFrame(rows, columns=class_names)
-        if Save_Prediction == True:
+        if Save_Prediction == 'True':
             new_rows_df.to_csv(str(save_path)+str(Model_used)+'.csv')
 
         test_accuracy = accuracy_score(ground_truth_test, predictions_test)
     print('validation Accuracy:',test_accuracy)
 
-    if confusion_matrix == True:
+    print(ground_truth_test, predictions_test)
+
+    if con_matrix == 'True':
         file_name = Model_used
         conf_matrix(ground_truth_test, predictions_test,save_path,file_name)
-    if indiviual_accuracy_plt == True:
+    if indiviual_accuracy_plt == 'True':
         file_name = Model_used
         class_names =  ['Angioectasia', 'Bleeding', 'Erosion', 'Erythema', 'Foreign Body',
                'Lymphangiectasia', 'Normal', 'Polyp', 'Ulcer', 'Worms']
         indiviual_acc_plt(ground_truth_test, predictions_test, save_path, file_name, class_names)
 
+    if metrics_report == 'True':
+        # One-hot encode the Gt
+        num_classes = 10  
+        y_true_one_hot = one_hot_encode(ground_truth_test, num_classes)
+
+        metrics_results= generate_metrics_report(y_true_one_hot, rows)        
+        report_filename=str(save_path)+'metrics_report.json'
+        with open(report_filename, 'w') as f:
+            json.dump(metrics_results, f, indent=4)
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--save-path', type=str, default=os.getcwd())
     parser.add_argument('--Model-used', type=str, default="efficient")
-    parser.add_argument('--confusion-matrix', type=str, default=False)
-    parser.add_argument('--indiviual-accuracy-plt', type=str, default=False)        
-    parser.add_argument('--Save_Prediction', type=str, default=False)
+    parser.add_argument('--con-matrix', type=str, default='False')
+    parser.add_argument('--indiviual-accuracy-plt', type=str, default='False')        
+    parser.add_argument('--Save_Prediction', type=str, default='False')
+    parser.add_argument('--metrics-report', type=str, default='False')
 
     parser.add_argument('--Train-xls-path', type=str, default='/home/neelamlab/Dataset/training/training_data.xlsx')
     parser.add_argument('--Val-xls-path', type=str, default='/home/neelamlab/Dataset/validation/validation_data.xlsx')
@@ -206,7 +221,7 @@ if __name__ == '__main__':
     Inference_model = opt.Model_used
     save_path = opt.save_path
     Model_used = opt.Model_used
-    confusion_matrix = opt.confusion_matrix
+    con_matrix = opt.con_matrix
     indiviual_accuracy_plt = opt.indiviual_accuracy_plt
 
     df_train = pd.read_excel(opt.Train_xls_path)
@@ -221,12 +236,12 @@ if __name__ == '__main__':
 
 
     # Instantiate the dataset (Balanced samples across each class)
-    #train_dataset = CustomDataset_clf(image_paths_train_balanced, labels_train_balanced)
-    ##Val_dataset = CustomDataset_clf(image_paths_val_balanced, labels_val_balanced)
+    train_dataset = CustomDataset_clf(image_paths_train_balanced, labels_train_balanced)
+    Val_dataset = CustomDataset_clf(image_paths_val_balanced, labels_val_balanced)
 
     # Instantiate the dataset (Unbalanced)
-    train_dataset = CustomDataset_clf(image_paths_train, labels_train)
-    Val_dataset = CustomDataset_clf(image_paths_val, labels_val)
+    #train_dataset = CustomDataset_clf(image_paths_train, labels_train)
+    #Val_dataset = CustomDataset_clf(image_paths_val, labels_val)
 
     batchsize = 16
     # Create the DataLoader
@@ -273,7 +288,7 @@ if __name__ == '__main__':
 
     if Inference_model == "efficient_fusion_no_Att":
 
-        model = EfficientNetWithAttention_fusion_1(num_classes=NUM_CLASSES)
+        model = EfficientNet_NoAttention_fusion(num_classes=NUM_CLASSES)
         # Load the model state dictionary
         state_dict = torch.load("/data/data/Models/Fusion_no_attention150_256.pth")
         # Handle 'DataParallel' case

@@ -138,9 +138,12 @@ def train_run(model,unet_model, LEARNING_RATE, EPOCHS):
 
             if Model_type == "efficient":
                 outputs = model(images)
-            if Model_type == "efficient_Att_Fusion" or "EfficientNet_NoAtt_Fusion":
+            if Model_type == "efficient_Att_Fusion":
                 # Pass images and the bottleneck output to the model
                 outputs = model(images, unet_output)
+            if Model_type == "EfficientNet_NoAtt_Fusion":
+                # Pass images and the bottleneck output to the model
+                outputs = model(images, unet_output)    
             if Model_type == "CNN_Classifier":
                 outputs = model(unet_output)
 
@@ -225,7 +228,7 @@ if __name__ == '__main__':
     parser.add_argument('--validation-size', type=float, default=0.1, help='Validation Size')
     parser.add_argument('--L-r', type=float, default=0.0001, help='Learning rate')
     parser.add_argument('--Loss-func', type=str, default='CrossEntropyLoss', help='Loss function')
-    parser.add_argument('--Train-Model', type=str, default="efficient")
+    parser.add_argument('--Model-type', type=str, default="efficient")
 
 
     opt = parser.parse_args()
@@ -234,7 +237,7 @@ if __name__ == '__main__':
     print("Using device:", device)
     NUM_CLASSES = 10
     # Initialize model and data loaders
-    Model_type = opt.Model_used
+    Model_type = opt.Model_type
     if Model_type == "efficient":
        model = EfficientNetWithAttention(num_classes=NUM_CLASSES)
     if Model_type == "efficient_Att_Fusion":

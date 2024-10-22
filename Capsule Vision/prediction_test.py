@@ -16,7 +16,7 @@ import numpy as np
 import argparse
 import torch.nn.functional as F
 from models import EfficientNetWithAttention,EfficientNetWithAttention_fusion,UNet,EfficientNet_NoAttention_fusion
-
+from evalution_metrics import save_predictions_to_excel,calculate_specificity,generate_metrics_report
 
 
 
@@ -85,12 +85,12 @@ def test_inference(model,unet_model,Val_loader):
             img_path.extend(labels)
             rows.append(probabilities.cpu().numpy())
 
-        class_names = ['Angioectasia', 'Bleeding', 'Erosion', 'Erythema', 'Foreign Body','Lymphangiectasia', 'Normal', 'Polyp', 'Ulcer', 'Worms']            
+        class_names = ['Angioectasia', 'Bleeding', 'Erosion', 'Erythema', 'Foreign Body','Lymphangiectasia', 'Normal', 'Polyp', 'Ulcer', 'Worms'] 
         rows = np.concatenate(rows, axis=0)
-        reshaped_rows = rows.reshape(len(rows), 10)
-        new_rows_df = pd.DataFrame(rows, columns=class_names)
+        #new_rows_df = pd.DataFrame(rows, columns=class_names)
         if Save_Prediction.lower() == 'true':
-            new_rows_df.to_csv(str(save_path)+str(Model_used)+'.csv')
+            save_predictions_to_excel(img_path, rows, save_path)
+            #new_rows_df.to_csv(str(save_path)+"/"+str(Model_used)+'.csv')
 
 
 if __name__ == '__main__':
