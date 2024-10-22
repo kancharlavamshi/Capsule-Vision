@@ -40,7 +40,7 @@ pip install -r requirements.txt  # install
 The commands below are used to train the model with specified configurations. The training process automatically handles data downloads and model initialization. Training times will vary depending on the model and the hardware used; expect different durations based on GPU capabilities. Use the largest --batch-size possible for optimal performance, or set --batch-size -1 for automatic batch sizing.
  
  ```
- python train.py --epochs 60 --batch-size 256 --save-model True --device cuda:0 --data_parallel True --parameters-print True --save-path ./output --model-name Model_ --validation-size 0.1 --L-r 0.0001 --Loss-func CrossEntropyLoss --Train-Model efficient
+ python train.py --epochs 60 --batch-size 256 --save-model True --device cuda:0 --data_parallel True --parameters-print True --save-path ./output --model-name Model_ --validation-size 0.1 --L-r 0.0001 --Loss-func CrossEntropyLoss --Model-type efficient
 ```
 
 </details> 
@@ -51,10 +51,29 @@ The commands below are used to train the model with specified configurations. Th
 The following commands are used to validate the model and generate relevant metrics.
  
  ```
-python validate.py --save-path ./output --Model-used efficient --confusion-matrix True --indiviual-accuracy-plt True --Save_Prediction True --Train-xls-path ./training/training_data.xlsx --Val-xls-path ./validation/validation_data.xlsx
+python validate.py --save-path ./output --Model-used efficient --con-matrix True --indiviual-accuracy-plt True --Save_Prediction True --metrics-report True --Train-xls-path ./training/training_data.xlsx --Val-xls-path ./validation/validation_data.xlsx 
 ```
 
 </details> 
 
 
+<details>
+<summary>Test</summary>
+The following commands are used to Test the model and generate Predictions(.csv/ xls file).
+ 
+ ```
+python prediction_test.py --save-path ./output --Model-used efficient --Print-prediction True
+```
 
+</details> 
+<details>
+ <summary>Confusion Matrix (Efficient+fusion) </summary>
+![efficient_fusion_no_AttCM_](https://github.com/user-attachments/assets/93deb3b3-d6b3-481e-aa09-b060630b74d4)
+<details>
+
+</details> 
+<details>
+ <summary>Individual  Accurices (Efficient+fusion) </summary>
+ ![efficient_fusion_no_AttInd_Cls_Acc](https://github.com/user-attachments/assets/94579dc9-2792-442b-9a3b-00afd0c7cc6d)
+
+<details>
