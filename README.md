@@ -74,6 +74,6 @@ python prediction_test.py --save-path ./output --Model-used efficient --Print-pr
 
 
 
- Individual  Accurices (Efficient+fusion)
+ Individual  Accuracies (Efficient+fusion)
  ![efficient_fusion_no_AttInd_Cls_Acc](https://github.com/user-attachments/assets/94579dc9-2792-442b-9a3b-00afd0c7cc6d)
 
