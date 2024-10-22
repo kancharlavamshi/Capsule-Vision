@@ -66,13 +66,14 @@ python prediction_test.py --save-path ./output --Model-used efficient --Print-pr
 ```
 
 </details> 
+
+
 <details>
- <summary>Confusion Matrix (Efficient+fusion) </summary>
+ Confusion Matrix (Efficient+fusion)
 ![efficient_fusion_no_AttCM_](https://github.com/user-attachments/assets/93deb3b3-d6b3-481e-aa09-b060630b74d4)
 <details>
 
 </details> 
-<details>
  <summary>Individual  Accurices (Efficient+fusion) </summary>
  ![efficient_fusion_no_AttInd_Cls_Acc](https://github.com/user-attachments/assets/94579dc9-2792-442b-9a3b-00afd0c7cc6d)
 
